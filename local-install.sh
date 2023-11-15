@@ -21,8 +21,8 @@ if [[ -z $(docker image ls --format json | jq '.. | strings | select(contains("k
   yarn tsc
   yarn build:backend --config ../../app-config.yaml
   docker image build . -f packages/backend/Dockerfile --tag k3d-backstack.localhost:5000/backstage
-  docker push k3d-backstack.localhost:5000/backstage
 fi
+docker push k3d-backstack.localhost:5000/backstage
 
 # Build local crossplane config
 crossplane build configuration --package-root=crossplane --name=backstack.xpkg

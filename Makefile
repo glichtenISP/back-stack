@@ -1,4 +1,5 @@
 CROSSPLANE_CLI_VERSION="v1.13.2"
+SHELL := /bin/bash
 
 .PHONY: install-crossplane-cli
 install-crossplane-cli:
@@ -12,14 +13,14 @@ install-crossplane-cli:
     cd scripts; \
     export XP_VERSION=${CROSSPLANE_CLI_VERSION} && curl -sL "https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh" | sh && mv crossplane ${HOME}/.local/bin/; \
     cd .. ;\
-fi
+  fi
 
 .PHONY: asdf-install
 asdf-install:
 	-@while read -r line; do \
-  linearray=($$line); \
-  asdf plugin add $$linearray > /dev/null || true; \
-done < .tool-versions
+    linearray=($$line); \
+    asdf plugin add $$linearray > /dev/null || true; \
+  done < .tool-versions
 	@asdf install > /dev/null
 	@echo "installed asdf dependencies"
 
@@ -30,4 +31,4 @@ clean:
 
 .PHONY: up
 up: clean install-crossplane-cli asdf-install
-	sh local-install.sh
+	bash local-install.sh
