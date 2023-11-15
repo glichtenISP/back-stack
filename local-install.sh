@@ -150,10 +150,10 @@ kubectl create -f - <<-EOF
       name: clusters
       namespace: argocd
       labels:
-        argocd.argoproj.io/secret-type: repository
+        argocd.argoproj.io/secret-type: repo-creds
     stringData:
       type: git
-      url: ${REPOSITORY}
+      url: ${GITHUB_ORG}
       password: ${GITHUB_TOKEN}
       username: back-stack
 EOF
