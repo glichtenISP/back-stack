@@ -277,16 +277,16 @@ spec:
               values:
                 ingress:
                   enabled: true
-                  annotations:  
+                  annotations:
                     cert-manager.io/cluster-issuer: selfsigned-cluster-issuer 
                   tls:
                     enabled: true
                     secretName: backstage-tls
                 backstage: 
                   image: 
-                    registry: ghcr.io
-                    repository: opendev-ie/back-stack-backstage
-                    tag: 1.0.0
+                    registry: k3d-backstack.localhost:5000
+                    repository: backstage
+                    tag: latest
                     pullPolicy: IfNotPresent
                   extraEnvVarsSecrets:
                   - backstage

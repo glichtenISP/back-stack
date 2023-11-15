@@ -2,14 +2,29 @@
 # import helpers
 . scripts/common.sh
 
+# get config
+loadenv ./.env
+
 # Create cluster and registry
 k3d registry create backstack.localhost --port 5000
 k3d cluster create backstack --registry-use k3d-backstack.localhost:5000 --agents 1 -p 80:80@agent:0 -p 443:443@agent:0
 
-# Build local crossplane config
 # Export docker default platform. The configuration will not install with arm
 # plaform architecture
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
+if [[ -z $(docker image ls --format json | jq '.. | strings | select(contains("k3d-backstack.localhost:5000/backstage"))') ]]; then
+  npm install --global yarn
+  # Build local backstage image & push it to k3d registry. Image previously used was only compatible with arm64
+  cd backstage
+  yarn install --frozen-lockfile
+  yarn tsc
+  yarn build:backend --config ../../app-config.yaml
+  docker image build . -f packages/backend/Dockerfile --tag k3d-backstack.localhost:5000/backstage
+  docker push k3d-backstack.localhost:5000/backstage
+fi
+
+# Build local crossplane config
 crossplane build configuration --package-root=crossplane --name=backstack.xpkg
 #1,14 command
 #crossplane xpkg build --package-file=crossplane/backstack.xpkg --package-root=crossplane
@@ -105,9 +120,6 @@ kubectl create -f - <<- EOF
           name: aws-secret
           key: credentials
 EOF
-
-# get config
-loadenv ./.env
 
 # deploy hub
 waitfor default crd hubs.backstack.cncf.io
