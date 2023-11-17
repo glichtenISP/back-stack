@@ -147,7 +147,7 @@ kubectl create -f - <<-EOF
     apiVersion: v1
     kind: Secret
     metadata:
-      name: clusters
+      name: repo-creds
       namespace: argocd
       labels:
         argocd.argoproj.io/secret-type: repo-creds
@@ -156,6 +156,19 @@ kubectl create -f - <<-EOF
       url: ${GITHUB_ORG}
       password: ${GITHUB_TOKEN}
       username: back-stack
+EOF
+
+kubectl create -f - <<-EOF
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: back-stack-repo
+      namespace: argocd
+      labels:
+        argocd.argoproj.io/secret-type: repository
+    stringData:
+      type: git
+      url: ${REPOSITORY}
 EOF
 
 waitfor default ns backstage

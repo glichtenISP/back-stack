@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/glichtenISP/back-stack
-    path: /demo/clusters/
+    path: /demo/applications/
     targetRevision: HEAD
   destination: 
     name: hostcluster
